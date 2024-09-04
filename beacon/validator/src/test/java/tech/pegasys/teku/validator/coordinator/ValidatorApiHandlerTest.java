@@ -120,9 +120,11 @@ import tech.pegasys.teku.spec.logic.versions.deneb.helpers.MiscHelpersDeneb;
 import tech.pegasys.teku.spec.util.DataStructureUtil;
 import tech.pegasys.teku.statetransition.attestation.AggregatingAttestationPool;
 import tech.pegasys.teku.statetransition.attestation.AttestationManager;
+import tech.pegasys.teku.statetransition.attestation.PayloadAttestationManager;
 import tech.pegasys.teku.statetransition.blobs.BlockBlobSidecarsTrackersPool;
 import tech.pegasys.teku.statetransition.block.BlockImportChannel;
 import tech.pegasys.teku.statetransition.block.BlockImportChannel.BlockImportAndBroadcastValidationResults;
+import tech.pegasys.teku.statetransition.block.ReceivedBlockEventsChannel;
 import tech.pegasys.teku.statetransition.forkchoice.ForkChoiceTrigger;
 import tech.pegasys.teku.statetransition.forkchoice.ProposersDataManager;
 import tech.pegasys.teku.statetransition.synccommittee.SyncCommitteeContributionPool;
@@ -146,6 +148,8 @@ class ValidatorApiHandlerTest {
   private final BlockFactory blockFactory = mock(BlockFactory.class);
   private final AggregatingAttestationPool attestationPool = mock(AggregatingAttestationPool.class);
   private final AttestationManager attestationManager = mock(AttestationManager.class);
+  private final PayloadAttestationManager payloadAttestationManager =
+      mock(PayloadAttestationManager.class);
   private final AttestationTopicSubscriber attestationTopicSubscriptions =
       mock(AttestationTopicSubscriber.class);
   private final ActiveValidatorTracker activeValidatorTracker = mock(ActiveValidatorTracker.class);
@@ -211,6 +215,7 @@ class ValidatorApiHandlerTest {
             blobSidecarGossipChannel,
             attestationPool,
             attestationManager,
+            payloadAttestationManager,
             attestationTopicSubscriptions,
             activeValidatorTracker,
             dutyMetrics,
@@ -221,7 +226,8 @@ class ValidatorApiHandlerTest {
             syncCommitteeMessagePool,
             syncCommitteeContributionPool,
             syncCommitteeSubscriptionManager,
-            blockProductionPerformanceFactory);
+            blockProductionPerformanceFactory,
+            ReceivedBlockEventsChannel.NOOP);
 
     when(syncStateProvider.getCurrentSyncState()).thenReturn(SyncState.IN_SYNC);
     when(forkChoiceTrigger.prepareForBlockProduction(any(), any())).thenReturn(SafeFuture.COMPLETE);
@@ -466,6 +472,7 @@ class ValidatorApiHandlerTest {
             blobSidecarGossipChannel,
             attestationPool,
             attestationManager,
+            payloadAttestationManager,
             attestationTopicSubscriptions,
             activeValidatorTracker,
             dutyMetrics,
@@ -476,7 +483,8 @@ class ValidatorApiHandlerTest {
             syncCommitteeMessagePool,
             syncCommitteeContributionPool,
             syncCommitteeSubscriptionManager,
-            blockProductionPerformanceFactory);
+            blockProductionPerformanceFactory,
+            ReceivedBlockEventsChannel.NOOP);
     // Best state is still in Phase0
     final BeaconState state =
         dataStructureUtil.stateBuilderPhase0().slot(previousEpochStartSlot.minus(1)).build();
@@ -1420,6 +1428,7 @@ class ValidatorApiHandlerTest {
             blobSidecarGossipChannel,
             attestationPool,
             attestationManager,
+            payloadAttestationManager,
             attestationTopicSubscriptions,
             activeValidatorTracker,
             dutyMetrics,
@@ -1430,7 +1439,8 @@ class ValidatorApiHandlerTest {
             syncCommitteeMessagePool,
             syncCommitteeContributionPool,
             syncCommitteeSubscriptionManager,
-            blockProductionPerformanceFactory);
+            blockProductionPerformanceFactory,
+            ReceivedBlockEventsChannel.NOOP);
 
     // BlobSidecar builder
     doAnswer(
