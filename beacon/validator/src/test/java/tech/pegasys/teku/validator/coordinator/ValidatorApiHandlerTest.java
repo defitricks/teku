@@ -183,6 +183,8 @@ class ValidatorApiHandlerTest {
       mock(ExecutionPayloadHeaderPool.class);
   private final ExecutionPayloadManager executionPayloadManager =
       mock(ExecutionPayloadManager.class);
+  private final ExecutionPayloadAndBlobSidecarsRevealer executionPayloadAndBlobSidecarsRevealer =
+      mock(ExecutionPayloadAndBlobSidecarsRevealer.class);
 
   @SuppressWarnings("unchecked")
   private final ArgumentCaptor<List<BlobSidecar>> blobSidecarsCaptor1 =
@@ -240,6 +242,7 @@ class ValidatorApiHandlerTest {
             syncCommitteeSubscriptionManager,
             executionPayloadHeaderPool,
             executionPayloadManager,
+            executionPayloadAndBlobSidecarsRevealer,
             blockProductionPerformanceFactory);
 
     when(syncStateProvider.getCurrentSyncState()).thenReturn(SyncState.IN_SYNC);
@@ -500,6 +503,7 @@ class ValidatorApiHandlerTest {
             syncCommitteeSubscriptionManager,
             executionPayloadHeaderPool,
             executionPayloadManager,
+            executionPayloadAndBlobSidecarsRevealer,
             blockProductionPerformanceFactory);
     // Best state is still in Phase0
     final BeaconState state =
@@ -1459,6 +1463,7 @@ class ValidatorApiHandlerTest {
             syncCommitteeSubscriptionManager,
             executionPayloadHeaderPool,
             executionPayloadManager,
+            executionPayloadAndBlobSidecarsRevealer,
             blockProductionPerformanceFactory);
 
     // BlobSidecar builder
